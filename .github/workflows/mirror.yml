@@ -1,36 +1,29 @@
-# This is a basic workflow to help you get started with Actions
+name: Mirror Repository to LESSEN Organization
 
-name: CI
+on: push
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  mirror:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Set up SSH for GitHub
+        env:
+          MIRROR_REPO_SSH_KEY: ${{ secrets.MIRROR_REPO_SSH_KEY }}
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          mkdir -p ~/.ssh
+          echo "$MIRROR_REPO_SSH_KEY" > ~/.ssh/mirror_repo_key
+          chmod 600 ~/.ssh/mirror_repo_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git config core.sshCommand "ssh -i ~/.ssh/mirror_repo_key"
+
+      - name: Push to mirror repository
+        run: |
+          git remote add mirror git@github.com:LESSEN-Project/mirrortest.git
+          git push --force --all mirror
+          git push --force --tags mirror
