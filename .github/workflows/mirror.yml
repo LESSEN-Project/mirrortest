@@ -1,23 +1,29 @@
-# This is a basic workflow to help you get started with Actions
+name: Mirror Repository to LESSEN Organization
 
-name: mirror_to_lessen
+on: push
 
-# Controls when the workflow will run
-on: [push, delete]
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "mirror"
   mirror:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:                                              # <-- must use actions/checkout@v1 before mirroring!
-    - uses: actions/checkout@v1
-    - uses: pixta-dev/repository-mirroring-action@v1
-      with:
-        target_repo_url:
-          git@gitlab.com:LESSEN-Project/mirrortest.git
-        ssh_private_key:                                # <-- use 'secrets' to pass credential information.
-          ${{ secrets.LESSEN_SECRET }}
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up SSH for GitHub
+        env:
+          MIRROR_REPO_SSH_KEY: ${{ secrets.MIRROR_REPO_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$MIRROR_REPO_SSH_KEY" > ~/.ssh/mirror_repo_key
+          chmod 600 ~/.ssh/mirror_repo_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git config core.sshCommand "ssh -i ~/.ssh/mirror_repo_key"
+
+      - name: Push to mirror repository
+        run: |
+          git remote add mirror git@github.com:LESSEN-Project/mirrortest.git
+          git push --force --all mirror
+          git push --force --tags mirror
