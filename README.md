@@ -118,17 +118,17 @@ To use the mirroring option, you need to set up a GitHub Action that pushes any 
 1. **Generate an SSH Key** (if you don’t have one already):
    - On your machine, run:
      ```bash
-     ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+     ssh-keygen -t ed25519 -C "your_email@example.com"
      ```
    - This command generates a public and private key pair. Save them in a secure location.
 
 2. **Add SSH Public Key to GitHub profile**:
-   - Copy the public key (usually in `~/.ssh/id_rsa.pub`).
+   - Copy the public key (usually in `~/.ssh/id_ed25519.pub`).
    - Go to **Settings** on your GitHub profile.
    - Under **SSH and GPG keys**, add the new SSH key.
 
 3. **Add SSH Private Key to Repository Secrets**:
-   - Copy the contents of the private key (e.g., `~/.ssh/id_rsa`).
+   - Copy the contents of the private key (e.g., `~/.ssh/id_ed25519`).
    - In your repository on GitHub, go to **Settings > Secrets and variables > Actions**.
    - Add a new secret named `MIRROR_REPO_SSH_KEY`, and paste the private key as the value.
 
@@ -138,13 +138,13 @@ To make sure you’ve copied the correct keys, you can display them in the termi
 
 - **Display Private Key** (for GitHub Secret setup):
   ```bash
-  cat ~/.ssh/id_rsa
+  cat ~/.ssh/id_ed25519
   ```
   *Copy the output carefully and paste it as the value for `MIRROR_REPO_SSH_KEY` in your GitHub repository’s secrets.*
 
 - **Display Public Key** (for GitHub Profile setup):
   ```bash
-  cat ~/.ssh/id_rsa.pub
+  cat ~/.ssh/id_ed25519.pub
   ```
   *Copy the entire output and add it to **Settings > SSH and GPG keys** on your GitHub profile.*
 
