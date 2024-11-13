@@ -1,6 +1,6 @@
 # Tutorial: Sharing Research Output with the LESSEN Organization on GitHub
 
-As part of our project, we would like to make your research output available on our shared GitHub organization page. This way we have a single location where all LESSEN research output is available to project members, industrial partners and the NWO. You have two options:
+As part of our project, we would like to make your research output available on our shared GitHub organization page. This way we have a single location where all LESSEN research output is available to project members, industrial partners and the NWO. To achieve this, you have two options:
 
 1. **Transfer the Repository** directly to the LESSEN organization.
 2. **Mirror the Repository** using a GitHub Action, which automatically synchronizes your repository with the organization’s repository on each `git push`.
