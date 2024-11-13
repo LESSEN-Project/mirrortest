@@ -5,7 +5,30 @@ As part of our project, you are required to make your research output available 
 1. **Transfer the Repository** directly to the LESSEN organization.
 2. **Mirror the Repository** using a GitHub Action, which automatically synchronizes your repository with the organization’s repository on each `git push`.
 
-Each method has its pros and cons, which are discussed at the end. **Please note that your private repositories will remain private even after sharing them on the LESSEN GitHub organization page.** The visibility of each repository can be controlled to ensure that unpublished work stays confidential.
+**Please note that your private repositories will remain private even after sharing them on the LESSEN GitHub organization page.** The visibility of each repository can be controlled to ensure that unpublished work stays confidential.
+
+## Pros and Cons of Each Option
+
+### **Option 1: Transfer the Repository**
+**Pros**:
+   - Simple, one-time setup.
+   - No additional maintenance.
+   - Centralizes all repository management under the organization.
+
+**Cons**:
+   - Full ownership is transferred to the organization, limiting control.
+   - Access management requires organization admin involvement.
+
+### **Option 2: Mirror the Repository**
+**Pros**:
+   - Maintains independent ownership of the original repository.
+   - Automated synchronization on every `git push`.
+   - Retains flexibility for ongoing development.
+
+**Cons**:
+   - Requires initial setup of SSH keys and GitHub Action configuration.
+   - Potential for configuration errors if SSH setup isn’t correct.
+   - Regular monitoring may be needed to ensure mirroring works as expected.
 
 ---
 
@@ -52,6 +75,7 @@ This setup ensures that mirrored content remains private, securing your unpublis
 
      jobs:
        mirror:
+         if: ${{ github.repository_owner != 'LESSEN-Project' }}  # Only run if this is not from the LESSEN organization
          runs-on: ubuntu-latest
 
          steps:
@@ -117,31 +141,6 @@ To make sure you’ve copied the correct keys, you can display them in the termi
 Once set up, this GitHub Action will push all branches and tags to the LESSEN organization’s copy whenever you push changes to your repository.
 
 **Important**: The mirroring process will keep the organization’s repository private, so only you and other authorized team members can view your unpublished work.
-
----
-
-## Pros and Cons of Each Option
-
-### **Option 1: Transfer the Repository**
-**Pros**:
-   - Simple, one-time setup.
-   - No additional maintenance.
-   - Centralizes all repository management under the organization.
-
-**Cons**:
-   - Full ownership is transferred to the organization, limiting control.
-   - Access management requires organization admin involvement.
-
-### **Option 2: Mirror the Repository**
-**Pros**:
-   - Maintains independent ownership of the original repository.
-   - Automated synchronization on every `git push`.
-   - Retains flexibility for ongoing development.
-
-**Cons**:
-   - Requires initial setup of SSH keys and GitHub Action configuration.
-   - Potential for configuration errors if SSH setup isn’t correct.
-   - Regular monitoring may be needed to ensure mirroring works as expected.
 
 ---
 
