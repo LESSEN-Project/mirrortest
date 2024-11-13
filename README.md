@@ -120,7 +120,7 @@ To use the mirroring option, you need to set up a GitHub Action that pushes any 
      ```bash
      ssh-keygen -t ed25519 -C "your_email@example.com"
      ```
-   - This command generates a public and private key pair. Save them in a secure location.
+   - This command generates a public and private key pair. The keys are saved to the `~/.ssh` directory.
 
 2. **Add SSH Public Key to GitHub profile**:
    - Copy the public key (usually in `~/.ssh/id_ed25519.pub`).
