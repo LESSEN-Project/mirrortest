@@ -67,36 +67,48 @@ To use the mirroring option, you need to set up a GitHub Action that pushes any 
    - Create a file named `mirror.yml` and paste the following code:
 
      ```yaml
-     name: Mirror Repository to LESSEN Organization
+      # GitHub Action: Mirror Repository to LESSEN Organization
+      # This action automatically pushes updates from this repository to the LESSEN-Project GitHub organization
+      # repository whenever changes are pushed.
+      
+      name: Mirror Repository to LESSEN Organization
+      on: push
 
-     on: push
+      jobs:
+        mirror:
+          # Prevent the action from running if the push event originates from the LESSEN organization, to avoid recursive looping
+          if: ${{ github.repository_owner != 'LESSEN-Project' }}
+      
+          runs-on: ubuntu-latest
+      
+          steps:
+            # Step 1: Check out the repository with full history
+            - name: Checkout the repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0  # Ensures full commit history is fetched, necessary for mirroring all branches
+      
+            # Step 2: Set up SSH to authenticate with the LESSEN organization
+            - name: Set up SSH for GitHub
+              env:
+                MIRROR_REPO_SSH_KEY: ${{ secrets.MIRROR_REPO_SSH_KEY }}  # Uses the private SSH key stored as a secret
+              run: |
+                mkdir -p ~/.ssh  # Create SSH directory
+                echo "$MIRROR_REPO_SSH_KEY" > ~/.ssh/mirror_repo_key  # Save SSH key to file
+                chmod 600 ~/.ssh/mirror_repo_key  # Set secure permissions for the key
+                ssh-keyscan github.com >> ~/.ssh/known_hosts  # Add GitHub to known hosts for secure SSH
+                git config core.sshCommand "ssh -i ~/.ssh/mirror_repo_key"  # Configure git to use this SSH key
+      
+            # Step 3: Add the LESSEN organization repository as a remote and push changes
+            - name: Push to mirror repository
+              run: |
+                # Add the LESSEN organization repository as a new remote called "mirror"
+                git remote add mirror git@github.com:LESSEN-Project/<repo_name>.git
+                
+                # Force push all branches and tags to the mirror repository
+                git push --force --all mirror
+                git push --force --tags mirror
 
-     jobs:
-       mirror:
-         if: ${{ github.repository_owner != 'LESSEN-Project' }}  # Only run if this is not from the LESSEN organization
-         runs-on: ubuntu-latest
-
-         steps:
-           - name: Checkout the repository
-             uses: actions/checkout@v4
-             with:
-               fetch-depth: 0  # Ensures full history is fetched
-
-           - name: Set up SSH for GitHub
-             env:
-               MIRROR_REPO_SSH_KEY: ${{ secrets.MIRROR_REPO_SSH_KEY }}
-             run: |
-               mkdir -p ~/.ssh
-               echo "$MIRROR_REPO_SSH_KEY" > ~/.ssh/mirror_repo_key
-               chmod 600 ~/.ssh/mirror_repo_key
-               ssh-keyscan github.com >> ~/.ssh/known_hosts
-               git config core.sshCommand "ssh -i ~/.ssh/mirror_repo_key"
-
-           - name: Push to mirror repository
-             run: |
-               git remote add mirror git@github.com:LESSEN-Project/<repo_name>.git
-               git push --force --all mirror
-               git push --force --tags mirror
      ```
 
 2. **Replace `<repo_name>`**: Update `<repo_name>` in the `mirror.yml` file with the actual name of your repository.
