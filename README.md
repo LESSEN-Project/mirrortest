@@ -122,12 +122,12 @@ To use the mirroring option, you need to set up a GitHub Action that pushes any 
      ```
    - This command generates a public and private key pair. Save them in a secure location.
 
-2. **Add SSH Key to GitHub**:
+2. **Add SSH Public Key to GitHub profile**:
    - Copy the public key (usually in `~/.ssh/id_rsa.pub`).
    - Go to **Settings** on your GitHub profile.
    - Under **SSH and GPG keys**, add the new SSH key.
 
-3. **Add SSH Key to Repository Secrets**:
+3. **Add SSH Private Key to Repository Secrets**:
    - Copy the contents of the private key (e.g., `~/.ssh/id_rsa`).
    - In your repository on GitHub, go to **Settings > Secrets and variables > Actions**.
    - Add a new secret named `MIRROR_REPO_SSH_KEY`, and paste the private key as the value.
