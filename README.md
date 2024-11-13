@@ -57,10 +57,8 @@ To use the mirroring option, you need to set up a GitHub Action that pushes any 
 2. **Create a New Repository**:
    - Click **New** to create a new repository.
    - Name the new repository exactly as your local repository name.
-   - Set the repository to **private** to keep your work secure.
+   - **If necessary**, set the repository to **private** to keep your work secure.
    - **Do not** initialize the repository with a README or other files.
-
-This setup ensures that mirrored content remains private, securing your unpublished work from public view. You control the access to this repository through GitHub's organization settings.
 
 ### Step 2: Create a GitHub Action in Your Repository
 
@@ -140,8 +138,6 @@ To make sure you’ve copied the correct keys, you can display them in the termi
 
 Once set up, this GitHub Action will push all branches and tags to the LESSEN organization’s copy whenever you push changes to your repository.
 
-**Important**: The mirroring process will keep the organization’s repository private, so only you and other authorized team members can view your unpublished work.
-
 ---
 
-By following these instructions, you can securely share your research output with the LESSEN organization while keeping unpublished work private. If you have any questions, please reach out for assistance.
+If you have any questions, please reach out for assistance.
