@@ -63,7 +63,7 @@ To use the mirroring option, you need to set up a GitHub Action that pushes any 
 ### Step 2: Create a GitHub Action in Your Repository
 
 1. **Add a Workflow File**:
-   - In your repository, navigate to `.github/workflows/`.
+   - In your repository, navigate to `.github/workflows/`. (create these directories if required)
    - Create a file named `mirror.yml` and paste the following code:
 
      ```yaml
