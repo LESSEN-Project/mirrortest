@@ -152,4 +152,74 @@ Once set up, this GitHub Action will push all branches and tags to the LESSEN or
 
 ---
 
-If you have any questions, please reach out for assistance.
+## 🧩 Troubleshooting
+
+### Problem: GitHub Action fails with “Permission denied (publickey)” or similar SSH/HTTPS errors
+
+This usually happens if your repository is using **HTTPS** instead of **SSH**, or if your SSH key has not been added correctly to GitHub or your repository secrets.
+
+### How to Fix the Issue by Switching to SSH
+
+1. **Check your current remote:**
+
+   * Run the following command in your local repository:
+
+     ```bash
+     git remote -v
+     ```
+   * If you see something like this:
+
+     ```
+     origin  https://github.com/<user>/<repo>.git (fetch)
+     origin  https://github.com/<user>/<repo>.git (push)
+     ```
+
+     your repository is currently using **HTTPS**.
+
+2. **Change the remote to SSH:**
+
+   * Replace `<user>` and `<repo>` with your actual GitHub username and repository name:
+
+     ```bash
+     git remote set-url origin git@github.com:<user>/<repo>.git
+     ```
+   * Verify the change:
+
+     ```bash
+     git remote -v
+     ```
+
+     You should now see:
+
+     ```
+     origin  git@github.com:<user>/<repo>.git (fetch)
+     origin  git@github.com:<user>/<repo>.git (push)
+     ```
+
+3. **Test your SSH connection:**
+
+   * Run:
+
+     ```bash
+     ssh -T git@github.com
+     ```
+   * You should see a message like:
+
+     ```
+     Hi <username>! You've successfully authenticated.
+     ```
+
+4. **(Optional) Use SSH by default for all GitHub repositories:**
+
+   * To avoid future HTTPS issues, you can configure Git to always use SSH for GitHub:
+
+     ```bash
+     git config --global url."git@github.com:".insteadof https://github.com/
+     ```
+   * To undo this later, run:
+
+     ```bash
+     git config --global --unset url."git@github.com:".insteadof
+     ```
+
+After switching to SSH, re-run your GitHub Action — it should now be able to push to the LESSEN organization repository successfully.
